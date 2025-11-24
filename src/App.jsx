@@ -1,18 +1,55 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import { AuthProvider } from "./context/AuthContext";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Login } from "./components/Login";
+import { Register } from "./components/Register";
+import { Dashboard } from "./pages/Dashboard";
+import { AdminPanel } from "./pages/AdminPanel";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <>
-      <h1 className="text-3xl font-bold text-red-500">Base SAAS</h1>
-      <p className="text-lg">
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Ruta principal */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
 
-        
-        Sistema base con autenticación, roles de usuario y rutas protegidas
-      </p>
-    </>
+          {/* Rutas públicas */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          {/* Rutas protegidas */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          {/* Ruta solo para admins */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminPanel />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

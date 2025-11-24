@@ -5,7 +5,8 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { auth } from "../config/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase/config";
 
 /**
  * Hook personalizado para manejar la autenticación con Firebase
@@ -18,7 +19,7 @@ export const useAuth = () => {
 
   // Escuchar cambios en el estado de autenticación
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         const userDoc = await getDoc(doc(db, "users", currentUser.uid));
         if (userDoc.exists()) {
@@ -36,7 +37,7 @@ export const useAuth = () => {
   }, []);
 
   // Registrar un nuevo usuario
-  const register = async (email, password, role="user") => {
+  const register = async (email, password, role = "user") => {
     try {
       setError(null);
       const userCredential = await createUserWithEmailAndPassword(
