@@ -5,6 +5,7 @@ import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { Dashboard } from "./pages/Dashboard";
 import { AdminPanel } from "./pages/AdminPanel";
+import { AdminUsers } from "./pages/AdminUsers";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 function App() {
@@ -42,6 +43,14 @@ function App() {
             element={
               <ProtectedRoute requireAdmin={true}>
                 <AdminPanel />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminUsers />
               </ProtectedRoute>
             }
           />
